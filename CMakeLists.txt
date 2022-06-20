@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.22.2)
 
 set(CMAKE_CXX_REQUIRED 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "-std=c++17")
 
 project(SO_LAB_5)
 
