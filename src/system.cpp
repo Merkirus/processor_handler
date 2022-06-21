@@ -50,20 +50,18 @@ void system::przekazProcesy(int from)
 
 void system::tick()
 {
-	++zegar;
-	for (int i = 0; i < procesory.size(); ++i) {
-		for (int j = 0; j < procesory.at(i).getProcesy().size(); ++j) {
-			procesory.at(i).getProcesy().at(j).zmniejszCzas();
-		}
-	}
-	for (int i = 0; i < procesory.size(); ++i) {
-		auto match = find_if(procesory.at(i).getProcesy().begin(), procesory.at(i).getProcesy().end(), [&](proces& proc) {
-			return proc.getCzas() == 0;
-		});
-		procesory.at(i).getProcesy().erase(match, procesory.at(i).getProcesy().end());
-	}
 	for (int i = 0; i < procesory.size(); ++i) {
 		procesory.at(i).updatePlus();
+	}
+	++zegar;
+	for (int i = 0; i < procesory.size(); ++i) {
+		procesory.at(i).zmniejszCzas();
+	}
+	for (int i = 0; i < procesory.size(); ++i) {
+		procesory.at(i).usuwanieZer();
+	}
+	for (int i = 0; i < procesory.size(); ++i) {
+		procesory.at(i).update();
 	}
 }
 
@@ -75,6 +73,36 @@ void system::pokazStatystyki()
 		std::cout << "Numer : " << index << " - " << procesor.getObciazenie() << '\n';
 		++index;
 	}
+	std::cout << "Średnie obciążenia: " << '\n';
+	index = 0;
+	for (auto procesor : procesory) {
+		int sum = 0;
+		for (int i : procesor.getHistoriaObciazen()) {
+			sum += i;
+		}
+		int wynik = sum / zegar;
+		std::cout << "Numer : " << index << " - " << wynik << '\n';
+		++index;
+	}
+	std::cout << "Migracje: " << '\n';
+	index = 0;
+	for (auto procesor : procesory) {
+		std::cout << "Numer : " << index << " - " << procesor.getMigracje() << '\n';
+		++index;
+	}
+	std::cout << "Zapytania: " << '\n';
+	index = 0;
+	for (auto procesor : procesory) {
+		std::cout << "Numer : " << index << " - " << procesor.getZapytania() << '\n';
+		++index;
+	}
+	std::cout << "Overloadingi: " << '\n';
+	index = 0;
+	for (auto procesor : procesory) {
+		std::cout << "Numer : " << index << " - " << procesor.getOverloading() << '\n';
+		++index;
+	}
+	
 }
 
 int system::getZegar()
@@ -85,4 +113,10 @@ int system::getZegar()
 std::vector<procesor> system::getProcesory()
 {
 	return procesory;
+}
+
+void system::generujProcesy()
+{
+	for (int i = 0; i < procesory.size(); ++i)
+		procesory.at(i).generujProcesy();
 }

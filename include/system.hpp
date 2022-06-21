@@ -17,6 +17,7 @@ public:
 	void pokazStatystyki();
 	int getZegar();
 	std::vector<procesor> getProcesory();
+	void generujProcesy();
 private:
 	std::vector<procesor> procesory;
 	std::vector< std::pair<int,int> > wiadomosci;

@@ -17,6 +17,8 @@ public:
 	proces getOneAndDestroy();
 	void update();
 	void updatePlus();
+	void zmniejszCzas();
+	void usuwanieZer();
 	/* DO STATYSTYK */
 	std::vector<int> getHistoriaObciazen();
 	int getObciazenie();

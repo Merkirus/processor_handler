@@ -2,8 +2,8 @@
 
 proces::proces()
 {
-	waga = randnum(3,10);
-	czas = randnum(5,15);
+	waga = randnum(3,7);
+	czas = randnum(3,10);
 }
 
 void proces::zmniejszCzas()

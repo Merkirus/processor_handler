@@ -1,6 +1,6 @@
 #include "procesor.hpp"
 
-#define UPPER_THRESHOLD 70
+#define OVERLOAD_THRESHOLD 70
 
 procesor::procesor()
 {
@@ -26,12 +26,13 @@ bool procesor::odbierzWiadomosc()
 
 void procesor::generujProcesy()
 {
-	if (randnum(1,3) == 1)
+	if (randnum(1,6) == 1 || overloaded)
 		return;
 
-	int how_many = randnum(1,4);
+	int how_many = randnum(2,6);
 	for (;how_many-- > 0;)
 		procesy.push_back(proces());
+	update();
 }
 
 std::vector<proces> procesor::getProcesy()
@@ -43,6 +44,7 @@ proces procesor::getOneAndDestroy()
 {
 	proces result = procesy.at(0);
 	procesy.erase(procesy.begin());
+	update();
 	return result;
 }
 
@@ -50,15 +52,17 @@ proces procesor::getOneAndDestroy()
 void procesor::dodajProces(proces proces)
 {
 	procesy.push_back(proces);
+	update();
 }
 
 void procesor::update()
 {
-	historia_obciazen.push_back(obciazenie);
 	obciazenie = 0;
 	for (int i = 0; i < procesy.size(); ++i) {
 		obciazenie += procesy.at(i).getWaga();
 	}
+	if (obciazenie <= OVERLOAD_THRESHOLD)
+		overloaded = false;
 }
 
 void procesor::updatePlus()
@@ -68,6 +72,8 @@ void procesor::updatePlus()
 	for (int i = 0; i < procesy.size(); ++i) {
 		obciazenie += procesy.at(i).getWaga();
 	}
+	if (obciazenie <= OVERLOAD_THRESHOLD)
+		overloaded = false;
 	if (obciazenie >= 100) {
 		++overloading;
 		overloaded = true;
@@ -77,4 +83,38 @@ void procesor::updatePlus()
 int procesor::getObciazenie()
 {
 	return obciazenie;
+}
+
+std::vector<int> procesor::getHistoriaObciazen()
+{
+	return historia_obciazen;
+}
+
+int procesor::getMigracje()
+{
+	return migracje;
+}
+
+int procesor::getZapytania()
+{
+	return zapytania;
+}
+
+void procesor::usuwanieZer()
+{
+	auto match = find_if(procesy.begin(), procesy.end(), [&](proces& proc) {
+			return proc.getCzas() == 0;
+		});
+	procesy.erase(match, procesy.end());
+}
+
+void procesor::zmniejszCzas()
+{
+	for (int i = 0; i < procesy.size(); ++i)
+		procesy.at(i).zmniejszCzas();
+}
+
+int procesor::getOverloading()
+{
+	return overloading;
 }
